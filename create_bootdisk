@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mount bootdisk/boot.img /media/floppy
+cp -f bin/kernel /media/floppy/boot/kernel
+umount -l /media/floppy
