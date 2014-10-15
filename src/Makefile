@@ -1,7 +1,7 @@
-SOURCES=boot64.o kernel64.o
+SOURCES=init64.o kstdio.o arch64.o isr.o isr64.o
 
 CFLAGS=-fno-stack-protector -fleading-underscore -std=c99
-LDFLAGS=-Ttext 0x100000 --entry boot_entry
+LDFLAGS=-Ttext 0x100000 -Tdata 0x180000 --entry boot_entry
 
 BINDIR=../bin
 OBJDIR=../obj
@@ -11,8 +11,8 @@ all: $(SOURCES) boot32 link32 link64 dump
 
 boot32:
 		cc -Wa,--32 $(CFLAGS) -c -o boot.o boot.S
-		cc -m32 $(CFLAGS) -c -o init64.o init64.c
-		cc -m32 $(CFLAGS) -c -o kstdio32.o kstdio32.c
+		cc -Wa,--32 $(CFLAGS) -c -o arch32.o arch32.S
+		cc -m32 $(CFLAGS) -c -o init32.o init32.c
 
 clean:
 		rm -f *.o *.elf
@@ -20,7 +20,7 @@ clean:
 		rm -rf $(OBJDIR)
 
 link32:
-		ld -i -melf_i386 -o boot32.o boot.o init64.o kstdio32.o
+		ld -i -melf_i386 -o boot32.o boot.o arch32.o init32.o
 		objcopy -O elf64-x86-64 boot32.o boot32_64.o
 
 link64:

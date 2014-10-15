@@ -9,6 +9,22 @@ typedef struct gdtr_s
 } __attribute__((packed)) gdtr_t;
 
 
+typedef struct idtr_s
+{
+    unsigned short table_limit;
+    unsigned long base_address;
+} __attribute__((packed)) idtr_t;
+
+
+typedef struct idt_entry_s
+{
+    unsigned int d1_32;
+    unsigned int d2_32;
+    unsigned int d3_32;
+    unsigned int d4_32;
+} __attribute__((packed)) idt_entry_t;
+
+
 typedef union gdt_entry_s
 {
     struct
@@ -42,17 +58,27 @@ typedef union gdt_entry_s
 typedef struct tss_gdt_entry_s
 {
     gdt_entry_t gdt_entry_l;
-    unsigned base_address_63_32         : 32;
 
     union
     {
-        struct
+        struct 
         {
-            unsigned reserved_7_0       : 8;
-            unsigned zero_flags         : 5;
-            unsigned reserved_31_13     : 19;
+            unsigned base_address_63_32         : 32;
+
+            union
+            {
+                struct
+                {
+                    unsigned reserved_7_0       : 8;
+                    unsigned zero_flags         : 5;
+                    unsigned reserved_31_13     : 19;
+                } __attribute__((packed));
+
+                unsigned reserved_31_0          : 32;
+            } __attribute__((packed));
         } __attribute__((packed));
-        unsigned reserved_31_0          : 32;
+
+        unsigned long long d_64;
     } __attribute__((packed));
 
 } __attribute__((packed)) tss_gdt_entry_t;

@@ -5,9 +5,9 @@ int x;
 int y;
 
 
-void k32printf(char *str, ...);
+void kprintf(const char *str, unsigned long long k1);
 
-int k32strlen(char *str)
+int kstrlen(const char *str)
 {
     int i = 0;
     while (str[i] != '\0')
@@ -15,10 +15,10 @@ int k32strlen(char *str)
     return i;
 }
 
-void k32printhex(int hexnum)
+void kprinthex(unsigned long long hexnum)
 {
-    char buffer[16] = "";
-    char rbuffer[16] = "";
+    char buffer[20] = "";
+    char rbuffer[20] = "";
 
     int i = 0;
     do
@@ -29,24 +29,21 @@ void k32printhex(int hexnum)
     }
     while (hexnum > 0);
 
-    char *b = buffer + k32strlen(buffer);
+    char *b = buffer + kstrlen(buffer);
     char *r = rbuffer;
     while (b-- != buffer)
     {
         *r++ = *b;
     }
 
-    k32printf(rbuffer);
+    kprintf(rbuffer, 0);
 }
 
 
-void k32printf(char *str, ...)
+void kprintf(const char *str, unsigned long long k1)
 {
     unsigned char *vidmem = (unsigned char *) VIDEO_MEMORY_ADDR;
-    char *c = str;
-
-    char ** arg = (char **) &str;
-    arg++;
+    const char *c = str;
 
     while (*c != '\0')
     {
@@ -58,7 +55,7 @@ void k32printf(char *str, ...)
             break;
         case '%':
             if (*(++c) == 'X')
-                k32printhex(*((int *)arg++));
+                kprinthex(k1);
             break;
         default:
             vidmem[(y * 80 + x) * 2] = *c;
@@ -76,14 +73,14 @@ void k32printf(char *str, ...)
     }
 }
 
-void k32cls()
+void kcls()
 {
     // assume 80x25
     unsigned char *vidmem = (unsigned char *) VIDEO_MEMORY_ADDR;
     for (; vidmem < ((unsigned char *) VIDEO_MEMORY_ADDR + 80*25*2); vidmem += 2)
     {
         *vidmem = ' ';
-        *(vidmem + 1) = 0x0F;
+        *(vidmem + 1) = 0x07;
     }
 
     x = 0; 
