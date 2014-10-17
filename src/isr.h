@@ -1,3 +1,6 @@
+#ifndef __ISR_HEADER__
+#define __ISR_HEADER__
+
 void _a64_isr_0();
 void _a64_isr_1();
 void _a64_isr_2();
@@ -254,3 +257,7 @@ void _a64_isr_252();
 void _a64_isr_253();
 void _a64_isr_254();
 void _a64_isr_255();
+
+void initialize_idt();
+
+#endif // __ISR_HEADER__

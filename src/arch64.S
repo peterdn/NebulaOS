@@ -1,4 +1,4 @@
-
+// TODO: move to .c __asm__ __volatile__ blocks.
 
 .globl __a64_outb
 __a64_outb:
@@ -31,16 +31,4 @@ __a64_set_tr:
 .globl __a64_set_idtr
 __a64_set_idtr:
         lidt _idtr
-        retq
-
-
-.globl __a64_enable_interrupts
-__a64_enable_interrupts:
-        sti
-        retq
-
-
-.globl __a64_disable_interrupts
-__a64_disable_interrupts:
-        sti
         retq

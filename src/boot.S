@@ -7,7 +7,7 @@
 
 .text
 .align 4
-.code32
+.code32         /* GRUB dumps us into 32-bit mode with paging disabled */
 
 /* multiboot header */
 multiboot_header:
@@ -23,7 +23,7 @@ multiboot_header:
 /* our actual boot entry point */
 .globl boot_entry
 boot_entry:
-        cli
+        cli                                 /* disable interrupts */
         movl $(stack + STACK_SIZE), %esp    /* set up the stack */
         pushl %ebx                          
         pushl %eax

@@ -1,12 +1,9 @@
 #include "arch_types.h"
 #include "isr.h"
+#include "kstdio.h"
+#include "i8259pic.h"
 
-void kcls();
-void kcur(int, int);
-void kprintf(const char *str, unsigned long long k1);
-void i8259_send_eoi(int irq);
-
-idt_entry_t idt[128];
+idt_entry_t idt[256];
 idtr_t idtr;
 int ms = 0;
 
@@ -38,13 +35,13 @@ void isr_handler(long interrupt_number, long error_code, long l1, long l2)
     }
     else if (interrupt_number == 33)
     {
-        i8259_send_eoi(1);
+        i8259pic_send_eoi(1);
     }
     else if (interrupt_number == 32)
     {
         ms += 10;
-        kcur(0, 2);
+        ksetcur(0, 2);
         kprintf("Ms: %X", ms);
-        i8259_send_eoi(0);
+        i8259pic_send_eoi(0);
     }
 }

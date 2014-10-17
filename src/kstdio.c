@@ -1,3 +1,5 @@
+#include "kstdio.h"
+
 
 #define VIDEO_MEMORY_ADDR 0xB8000
 
@@ -5,17 +7,7 @@ int x;
 int y;
 
 
-void kprintf(const char *str, unsigned long long k1);
-
-int kstrlen(const char *str)
-{
-    int i = 0;
-    while (str[i] != '\0')
-        ++i;
-    return i;
-}
-
-void kcur(int kx, int ky)
+void ksetcur(int kx, int ky)
 {
     x = kx;
     y = ky;

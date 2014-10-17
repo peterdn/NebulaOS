@@ -1,21 +1,18 @@
 #include "arch_types.h"
+#include "kstdio.h"
+#include "kstdlib.h"
+#include "isr.h"
 
-void kcls();
-void kprintf(const char *str, unsigned long long k1);
-int kstrlen(const char *str);
+#include "i8259pic.h"
+#include "i8254pit.h"
+#include "arch64.h"
+
+
 
 extern gdt_t gdt;
 
 void initialize_tss();
-void initialize_idt();
-void _a64_set_tr();
-void _a64_set_idtr();
-void i8259_remap();
-void i8259_disable();
-void _a64_enable_interrupts();
-void pit_setup();
-void i8259_set_mask(int bit);
-void i8259_mask_all_interrupts();
+
 
 void kinit64()
 {
@@ -30,16 +27,16 @@ void kinit64()
 
     // Set up PIC
     // TODO: APIC
-    i8259_mask_all_interrupts();
-    i8259_remap();
+    i8259pic_mask_all_interrupts();
+    i8259pic_remap();
 
     // enable interrupts    
     _a64_enable_interrupts();
-    i8259_set_mask(1);
+    i8259pic_set_mask(1);
 
     // Set up PIT
-    pit_setup();
-    i8259_set_mask(0);
+    i8254pic_setup();
+    i8259pic_set_mask(0);
 
 
     kprintf("Seriously...\n", 0);
