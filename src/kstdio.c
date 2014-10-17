@@ -15,6 +15,12 @@ int kstrlen(const char *str)
     return i;
 }
 
+void kcur(int kx, int ky)
+{
+    x = kx;
+    y = ky;
+}
+
 void kprinthex(unsigned long long hexnum)
 {
     char buffer[20] = "";

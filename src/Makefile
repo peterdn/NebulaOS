@@ -1,4 +1,4 @@
-SOURCES=init64.o kstdio.o arch64.o isr.o isr64.o
+SOURCES=init64.o kstdio.o arch64.o isr.o isr64.o i8259.o
 
 CFLAGS=-fno-stack-protector -fleading-underscore -std=c99
 LDFLAGS=-Ttext 0x100000 -Tdata 0x180000 --entry boot_entry

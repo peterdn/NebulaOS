@@ -23,6 +23,7 @@ multiboot_header:
 /* our actual boot entry point */
 .globl boot_entry
 boot_entry:
+        cli
         movl $(stack + STACK_SIZE), %esp    /* set up the stack */
         pushl %ebx                          
         pushl %eax

@@ -1,10 +1,14 @@
 #include "arch_types.h"
 #include "isr.h"
 
+void kcls();
+void kcur(int, int);
 void kprintf(const char *str, unsigned long long k1);
+void i8259_send_eoi(int irq);
 
-idt_entry_t idt[32];
+idt_entry_t idt[128];
 idtr_t idtr;
+int ms = 0;
 
 void write_idt_entry(int interrupt_number, void (*isr_routine)())
 {
@@ -27,18 +31,20 @@ void initialize_idt()
 
 void isr_handler(long interrupt_number, long error_code, long l1, long l2)
 {
-    kprintf("Got interrupt 0x%X\n", interrupt_number);
-    kprintf("Got error code 0x%X\n", error_code);
-    kprintf("Got l1 0x%X\n", l1);
-    kprintf("Got l2 0x%X\n", l2);
-    
     if (interrupt_number == 0)
     {
         kprintf("DIVIDE BY 0...\n", 0);
         for (;;);
     }
-    else if (interrupt_number == 14)
+    else if (interrupt_number == 33)
     {
-        kprintf("Page fault at address 0x%X\n", error_code);
+        i8259_send_eoi(1);
+    }
+    else if (interrupt_number == 32)
+    {
+        ms += 10;
+        kcur(0, 2);
+        kprintf("Ms: %X", ms);
+        i8259_send_eoi(0);
     }
 }

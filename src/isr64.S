@@ -11,7 +11,7 @@ __a64_isr_\n:
 .macro DEFINE_ERROR_CODE_ISR n
 .globl __a64_isr_\n
 __a64_isr_\n:
-        //cli
+        cli
         subq $0x8, %rsp
         pushq $\n       // push interrupt number
         jmp __a64_isr_handler
@@ -55,7 +55,7 @@ __a64_isr_handler:
         popq %rsi
         popq %rdi
         add $0x10, %rsp
-        //sti
+        sti
         iretq
 
 

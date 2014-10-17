@@ -10,6 +10,12 @@ void initialize_tss();
 void initialize_idt();
 void _a64_set_tr();
 void _a64_set_idtr();
+void i8259_remap();
+void i8259_disable();
+void _a64_enable_interrupts();
+void pit_setup();
+void i8259_set_mask(int bit);
+void i8259_mask_all_interrupts();
 
 void kinit64()
 {
@@ -22,12 +28,21 @@ void kinit64()
     initialize_idt();
     _a64_set_idtr();
 
-    int x = 5;
-    int s = kstrlen("");
+    // Set up PIC
+    // TODO: APIC
+    i8259_mask_all_interrupts();
+    i8259_remap();
 
-    int r = x/s;
+    // enable interrupts    
+    _a64_enable_interrupts();
+    i8259_set_mask(1);
 
-    kprintf("This happens after the exception\n", 0);
+    // Set up PIT
+    pit_setup();
+    i8259_set_mask(0);
+
+
+    kprintf("Seriously...\n", 0);
 
     for(;;);
 }
