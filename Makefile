@@ -4,3 +4,8 @@ all:
 clean:
 		cd src; $(MAKE) clean
 
+bootdisk: all
+		sudo scripts/create_bootdisk
+
+bochs: bootdisk
+		scripts/run_bochs

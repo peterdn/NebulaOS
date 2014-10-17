@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cp -u bootdisk/boot.img bootdisk/nebula.img
+mount bootdisk/nebula.img /media/floppy
+cp -f bin/kernel /media/floppy/boot/kernel
+umount -l /media/floppy
