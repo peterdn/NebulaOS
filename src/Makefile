@@ -26,7 +26,7 @@ OBJS=$(ASMOBJS:%.o=$(OBJDIR)/%.o) $(COBJS:%.o=$(OBJDIR)/%.o)
 OBJS32=$(ASMOBJS32:%.o=$(OBJDIR)/%.o) $(COBJS32:%.o=$(OBJDIR)/%.o)
 
 
-CFLAGS=-fno-stack-protector -fleading-underscore -std=c99
+CFLAGS=-Wall -Werror -fno-stack-protector -fleading-underscore -std=c99
 LDFLAGS=-Ttext 0x100000 -Tdata 0x180000 --entry boot_entry
 
 

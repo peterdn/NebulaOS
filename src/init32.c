@@ -3,6 +3,7 @@
 
 // 64-bit GDT.
 gdt_t gdt;
+multiboot_info_t *multiboot_info;
 
 // Forward declarations.
 void initialize_paging_structures();
@@ -22,6 +23,8 @@ void kinit64();
 
 void kinit32(unsigned long magic, multiboot_info_t *info)
 {
+    multiboot_info = info;
+
     // Enable IA-32e paging and segmentation structures.
     initialize_paging_structures();
     initialize_gdt();

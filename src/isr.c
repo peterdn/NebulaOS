@@ -40,8 +40,8 @@ void isr_handler(long interrupt_number, long error_code, long l1, long l2)
     else if (interrupt_number == 32)
     {
         ms += 10;
-        ksetcur(0, 2);
-        kprintf("Ms: %X", ms);
+        if (ms % 100 == 0)
+            kprintf("Ms: %X\n", ms);
         i8259pic_send_eoi(0);
     }
 }

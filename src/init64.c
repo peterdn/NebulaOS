@@ -6,10 +6,12 @@
 #include "i8259pic.h"
 #include "i8254pit.h"
 #include "arch64.h"
+#include "multiboot.h"
 
 
 
 extern gdt_t gdt;
+extern multiboot_info_t *multiboot_info;
 
 void initialize_tss();
 
@@ -39,7 +41,10 @@ void kinit64()
     i8259pic_set_mask(0);
 
 
-    kprintf("Seriously...\n", 0);
+    kprintf("Seriously...\n");
+    kprintf("Memory info:\n");
+    kprintf("\tLower memory: 0x%X\n\tUpper memory: 0x%X\n\n", 
+        (int)multiboot_info->mem_lower, (int)multiboot_info->mem_upper);
 
     for(;;);
 }

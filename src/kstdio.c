@@ -1,11 +1,55 @@
 #include "kstdio.h"
+#include "stdarg.h"
 
 
-#define VIDEO_MEMORY_ADDR 0xB8000
 
-int x;
-int y;
+static unsigned char *const vidmem = (unsigned char *) VIDEO_ADDR;
+int x = 0;
+int y = 0;
 
+
+
+void kscroll(int lines)
+{
+    unsigned char *src = vidmem + (lines * VIDEO_COLS * 2);
+    int nbytes = (VIDEO_COLS * 2) * (VIDEO_ROWS - lines);
+    unsigned char *dest = kmemcpy(src, vidmem, nbytes);
+    kmemset(dest, '\0', VIDEO_COLS * 2 * lines);
+}
+
+
+void kputchar(char c)
+{
+    switch (c)
+    {
+    case '\n':
+        x = 0;
+        ++y;
+        break;
+    case '\r':
+        ++y;
+        break;
+    case '\t':
+        x = ((x / VIDEO_DEFAULT_TAB_SIZE) + 1) * VIDEO_DEFAULT_TAB_SIZE;
+        break;
+    default:
+        vidmem[(y * VIDEO_COLS + x) * 2] = c;
+        vidmem[(y * VIDEO_COLS + x) * 2 + 1] = 0x7;
+        ++x;
+        break;
+    }
+    
+    if (x >= VIDEO_COLS)
+    {
+        x = 0;
+    }
+
+    if (y >= VIDEO_ROWS)
+    {
+        kscroll(VIDEO_DEFAULT_SCROLL);
+        y -= VIDEO_DEFAULT_SCROLL;
+    }
+}
 
 void ksetcur(int kx, int ky)
 {
@@ -13,58 +57,28 @@ void ksetcur(int kx, int ky)
     y = ky;
 }
 
-void kprinthex(unsigned long long hexnum)
+void kprintf(const char *str, ...)
 {
-    char buffer[20] = "";
-    char rbuffer[20] = "";
+    va_list list;
+    va_start(list, str);
 
-    int i = 0;
-    do
-    {
-        int r = hexnum % 0x10;
-        buffer[i++] = (char) (r < 10 ? r + 0x30 : (r-10) + 0x41);
-        hexnum = hexnum / 0x10; 
-    }
-    while (hexnum > 0);
-
-    char *b = buffer + kstrlen(buffer);
-    char *r = rbuffer;
-    while (b-- != buffer)
-    {
-        *r++ = *b;
-    }
-
-    kprintf(rbuffer, 0);
-}
-
-
-void kprintf(const char *str, unsigned long long k1)
-{
-    unsigned char *vidmem = (unsigned char *) VIDEO_MEMORY_ADDR;
     const char *c = str;
 
     while (*c != '\0')
     {
         switch (*c)
         {
-        case '\n':
-            ++y;
-            x = 0;
-            break;
         case '%':
             if (*(++c) == 'X')
-                kprinthex(k1);
+            {
+                int k1 = va_arg(list, int);
+                char buffer[20];
+                kprintf(itoa(k1, buffer, 10));
+            }
             break;
         default:
-            vidmem[(y * 80 + x) * 2] = *c;
-            ++x;
+            kputchar(*c);
             break;
-        }
-
-        if (x >= 80)
-        {
-            ++y;
-            x = 0;
         }
 
         ++c;
@@ -74,11 +88,11 @@ void kprintf(const char *str, unsigned long long k1)
 void kcls()
 {
     // assume 80x25
-    unsigned char *vidmem = (unsigned char *) VIDEO_MEMORY_ADDR;
-    for (; vidmem < ((unsigned char *) VIDEO_MEMORY_ADDR + 80*25*2); vidmem += 2)
+    unsigned char *v = vidmem;
+    for (; v < ((unsigned char *) vidmem + 80*25*2); v += 2)
     {
-        *vidmem = ' ';
-        *(vidmem + 1) = 0x07;
+        *v = ' ';
+        *(v + 1) = 0x07;
     }
 
     x = 0; 
