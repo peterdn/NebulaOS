@@ -22,7 +22,7 @@ void initialize_idt()
 {
     #include "idt.c"
 
-    idtr.base_address = (unsigned long) &idt[0];
+    idtr.base_address = &idt[0];
     idtr.table_limit = sizeof(idt);
 }
 
@@ -40,8 +40,6 @@ void isr_handler(long interrupt_number, long error_code, long l1, long l2)
     else if (interrupt_number == 32)
     {
         ms += 10;
-        if (ms % 100 == 0)
-            kprintf("Ms: %X\n", ms);
         i8259pic_send_eoi(0);
     }
 }

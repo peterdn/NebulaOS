@@ -23,8 +23,6 @@ __a64_isr_handler:
         pushq %rsi
         movq 0x10(%rsp), %rdi   // interrupt number
         movq 0x18(%rsp), %rsi   // error code
-        movq %cr2, %rdx   // interrupt number
-        movq %cr2, %rcx   // error code
         pushq %rcx
         pushq %rdx
         pushq %rbp

@@ -9,7 +9,8 @@ CSRCS=init64.c \
         isr.c \
         i8259pic.c \
         i8254pit.c \
-        kstdlib.c
+        kstdlib.c \
+        user.c
 
 ASMSRCS32=boot.S \
           arch32.S \

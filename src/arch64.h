@@ -20,6 +20,8 @@ unsigned char _a64_inb(unsigned short port);
 void _a64_io_wait();
 void _a64_set_tr();
 void _a64_set_idtr();
+void _a64_set_cr3(unsigned long value);
+
 
 
 #endif // ASM

@@ -14,6 +14,10 @@ extern gdt_t gdt;
 extern multiboot_info_t *multiboot_info;
 
 void initialize_tss();
+void initialize_user_paging();
+void _a64_exec();
+
+char *str = "";
 
 
 void kinit64()
@@ -46,6 +50,11 @@ void kinit64()
     kprintf("\tLower memory: 0x%X\n\tUpper memory: 0x%X\n\n", 
         (int)multiboot_info->mem_lower, (int)multiboot_info->mem_upper);
 
+    kprintf("Executing user mode process...\n");
+    initialize_user_paging();
+    _a64_disable_interrupts();
+    _a64_exec();
+
     for(;;);
 }
 
@@ -56,8 +65,30 @@ void initialize_tss()
 
     // base at 0x203000
     // see page 1999 of massive intel book
-    gdt.tss.gdt_entry_l.l_32 = 0x03000000 + 104;
+    gdt.tss.gdt_entry_l.l_32 = 0x30000000 + 104;
     gdt.tss.gdt_entry_l.base_address_23_16 = 0x20;
     gdt.tss.gdt_entry_l.segment_type = 9;   // 64-bit TSS (available)
     gdt.tss.gdt_entry_l.segment_present = 1;
+}
+
+void initialize_user_paging()
+{
+    // Process page database starts at 4mb
+    
+    // Map first 16mb identity (8x2mb pages)
+    // Page directory at 0x402000
+    pd_entry_2mb_page_t *page = (pd_entry_2mb_page_t *) 0x402000;
+    for (int i = 0; i < 8; ++i) 
+    {
+        page[i].d64 = (i * 0x200000) | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SIZE | PAGE_USERMODE;
+        //k32printf("Address of page[i].d64 = 0x%X, val = 0x%X\n", &page[i].d64, (int)page[i].d64);
+    }
+
+    // Page directory pointer table at 0x401000
+    pdpt_entry_t *pdpte = (pdpt_entry_t *) 0x401000;
+    pdpte->d64 = ((unsigned long) page) | PAGE_PRESENT | PAGE_WRITABLE | PAGE_USERMODE;
+
+    // Page map level 4 table at 4mb
+    pml4_entry_t *pml4e = (pml4_entry_t *) 0x400000;
+    pml4e->d64 = ((unsigned long) pdpte) | PAGE_PRESENT | PAGE_WRITABLE | PAGE_USERMODE;
 }

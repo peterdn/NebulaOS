@@ -1,27 +1,28 @@
 #ifndef __ARCH_TYPES_H__
 #define __ARCH_TYPES_H__
 
+#include "stdtypes.h"
 
 typedef struct gdtr_s
 {
-    unsigned short table_limit;
-    unsigned long base_address;
+    uint16_t table_limit;
+    void *base_address;
 } __attribute__((packed)) gdtr_t;
 
 
 typedef struct idtr_s
 {
-    unsigned short table_limit;
-    unsigned long base_address;
+    uint16_t table_limit;
+    void *base_address;
 } __attribute__((packed)) idtr_t;
 
 
 typedef struct idt_entry_s
 {
-    unsigned int d1_32;
-    unsigned int d2_32;
-    unsigned int d3_32;
-    unsigned int d4_32;
+    uint32_t d1_32;
+    uint32_t d2_32;
+    uint32_t d3_32;
+    uint32_t d4_32;
 } __attribute__((packed)) idt_entry_t;
 
 
@@ -46,11 +47,11 @@ typedef union gdt_entry_s
 
     struct
     {
-        unsigned l_32 : 32;
-        unsigned u_32 : 32;
+        uint32_t l_32;
+        uint32_t u_32;
     } __attribute__((packed));
 
-    unsigned long long d_64;
+    uint64_t d_64;
 
 } __attribute__((packed)) gdt_entry_t;
 
@@ -78,7 +79,7 @@ typedef struct tss_gdt_entry_s
             } __attribute__((packed));
         } __attribute__((packed));
 
-        unsigned long long d_64;
+        uint64_t d_64;
     } __attribute__((packed));
 
 } __attribute__((packed)) tss_gdt_entry_t;
@@ -118,7 +119,7 @@ typedef union pml4_entry_s
         unsigned execute_disable            : 1;
     } __attribute__((packed));
 
-    unsigned long long d64;
+    uint64_t d64;
 
 } __attribute__((packed)) pml4_entry_t;
 
@@ -142,7 +143,7 @@ typedef union pdpt_entry_s
         unsigned execute_disable            : 1;
     } __attribute__((packed));
 
-    unsigned long long d64;
+    uint64_t d64;
 
 } __attribute__((packed)) pdpt_entry_t;
 
@@ -169,13 +170,14 @@ typedef union pd_entry_2mb_page_s
         unsigned execute_disable            : 1;
     } __attribute__((packed));
 
-    unsigned long long d64;
+    uint64_t d64;
 
 } __attribute__((packed)) pd_entry_2mb_page_t;
 
 
 #define PAGE_PRESENT    1
 #define PAGE_WRITABLE   2
+#define PAGE_USERMODE   4
 #define PAGE_SIZE       128
 
 
