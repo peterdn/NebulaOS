@@ -72,7 +72,7 @@ __a64_exec:
         movq $2, %rax
         sti
         //ljmp *ptr_user_func
-        retfq
+        lretq
 
 
 ptr_user_func:
