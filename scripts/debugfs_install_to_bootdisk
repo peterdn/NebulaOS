@@ -1,0 +1,7 @@
+cd boot
+rm kernel
+write bin/kernel kernel
+cd grub
+rm grub.cfg
+write bootdisk/grub.cfg grub.cfg
+q

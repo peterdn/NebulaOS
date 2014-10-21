@@ -1,6 +1,10 @@
 #!/bin/bash
 
-cp -u bootdisk/boot.img bootdisk/nebula.img
-mount bootdisk/nebula.img /media/floppy
-cp -f bin/kernel /media/floppy/boot/kernel
-umount -l /media/floppy
+dd if=/dev/zero of=nebula.img bs=512 count=131072
+mkfs.ext2 -F nebula.img
+sudo losetup /dev/loop0 nebula.img
+sudo mount -t ext2 /dev/loop0 /media/usb
+sudo grub-install -d ~/Development/grub/gbin/lib/grub/i386-pc --root-directory=/media/usb --no-floppy --modules="normal part_msdos ext2 multiboot" --recheck --force /dev/loop0
+sudo umount /dev/loop0
+sudo losetup -d /dev/loop0
+

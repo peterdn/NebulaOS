@@ -45,7 +45,6 @@ void kinit64()
     i8259pic_set_mask(0);
 
 
-    kprintf("Seriously...\n");
     kprintf("Memory info:\n");
     kprintf("\tLower memory: 0x%X\n\tUpper memory: 0x%X\n\n", 
         (int)multiboot_info->mem_lower, (int)multiboot_info->mem_upper);

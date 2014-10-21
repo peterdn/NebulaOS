@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Create image file if it does not exist
+if [ ! -f bootdisk/nebula.img ]; then
+    bunzip2 -k bootdisk/nebula.img.bz2
+fi
+
+debugfs -f scripts/debugfs_install_to_bootdisk -w bootdisk/nebula.img

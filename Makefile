@@ -3,9 +3,12 @@ all:
 
 clean:
 		cd src; $(MAKE) clean
+		
+cleandisk:
+		rm bootdisk/nebula.img
 
 bootdisk: all
-		sudo scripts/create_bootdisk
+		scripts/install_to_bootdisk
 
 bochs: bootdisk
 		scripts/run_bochs

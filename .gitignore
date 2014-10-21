@@ -2,3 +2,5 @@ bin/
 *.o
 *.elf
 bootdisk/nebula.img
+nebula.dbg
+nebula.log
