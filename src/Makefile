@@ -9,8 +9,9 @@ CSRCS=init64.c \
         isr.c \
         i8259pic.c \
         i8254pit.c \
-        kstdlib.c \
-        user.c
+        kstdlib.c
+
+RSSRCS=user.rs
 
 ASMSRCS32=boot.S \
           arch32.S \
@@ -18,27 +19,32 @@ ASMSRCS32=boot.S \
 CSRCS32=init32.c
 
 
-COBJS=$(CSRCS:.c=.o)
+COBJS=$(CSRCS:.c=.o) 
+RSOBJS=$(RSSRCS:.rs=.o)
 ASMOBJS=$(ASMSRCS:.S=.o)
 COBJS32=$(CSRCS32:.c=.o)
 ASMOBJS32=$(ASMSRCS32:.S=.o)
 
-OBJS=$(ASMOBJS:%.o=$(OBJDIR)/%.o) $(COBJS:%.o=$(OBJDIR)/%.o)
+OBJS=$(ASMOBJS:%.o=$(OBJDIR)/%.o) $(COBJS:%.o=$(OBJDIR)/%.o) $(RSOBJS:%.o=$(OBJDIR)/%.o)
 OBJS32=$(ASMOBJS32:%.o=$(OBJDIR)/%.o) $(COBJS32:%.o=$(OBJDIR)/%.o)
 
 
 CFLAGS=-Wall -Werror -fno-stack-protector -fleading-underscore -std=c99
 LDFLAGS=-Ttext 0x100000 -Tdata 0x180000 --entry boot_entry
+RSFLAGS=--crate-type lib --emit obj
 
 
 
-all: init $(COBJS) $(ASMOBJS) $(COBJS32) $(ASMOBJS32) link32 link64 binary
+all: init $(COBJS) $(RSOBJS) $(ASMOBJS) $(COBJS32) $(ASMOBJS32) link32 link64 binary
 
 init:
 		mkdir -p $(OBJDIR)
 
 $(COBJS): %.o: %.c
 		cc $(CFLAGS) -c $< -o $(OBJDIR)/$@
+
+$(RSOBJS): %.o: %.rs
+		rustc $(RSFLAGS) $< -o $(OBJDIR)/$@
 
 $(ASMOBJS): %.o: %.S
 		mkdir -p $(OBJDIR)
