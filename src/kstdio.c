@@ -57,6 +57,16 @@ void ksetcur(int kx, int ky)
     y = ky;
 }
 
+int kgetcurx() 
+{
+    return x;
+}
+
+int kgetcury()
+{
+    return y;
+}
+
 void kprintf(const char *str, ...)
 {
     va_list list;
@@ -68,14 +78,22 @@ void kprintf(const char *str, ...)
     {
         switch (*c)
         {
-        case '%':
-            if (*(++c) == 'X')
+        case '%': {
+            char fn = *(++c);
+            if (fn == 'X')
+            {
+                int k1 = va_arg(list, int);
+                char buffer[20];
+                kprintf(itoa(k1, buffer, 16));
+            }
+            else if (fn == 'd')
             {
                 int k1 = va_arg(list, int);
                 char buffer[20];
                 kprintf(itoa(k1, buffer, 10));
             }
             break;
+        }
         default:
             kputchar(*c);
             break;

@@ -27,7 +27,7 @@ boot_entry:
         movl $(stack + STACK_SIZE), %esp    /* set up the stack */
         pushl %ebx                          
         pushl %eax
-        call _kinit32                       /* our C entry */
+        call kinit32                       /* our C entry */
 
 
 /* stack starts here */

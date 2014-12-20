@@ -1,23 +1,23 @@
 
 .macro DEFINE_ISR n
-.globl __a64_isr_\n
-__a64_isr_\n:
+.globl _a64_isr_\n
+_a64_isr_\n:
         cli
         pushq $0        // push fake error code
         pushq $\n       // push interrupt number
-        jmp __a64_isr_handler
+        jmp _a64_isr_handler
 .endm
 
 .macro DEFINE_ERROR_CODE_ISR n
-.globl __a64_isr_\n
-__a64_isr_\n:
+.globl _a64_isr_\n
+_a64_isr_\n:
         cli
         subq $0x8, %rsp
         pushq $\n       // push interrupt number
-        jmp __a64_isr_handler
+        jmp _a64_isr_handler
 .endm
 
-__a64_isr_handler:
+_a64_isr_handler:
         // Save state of everything...!
         pushq %rdi
         pushq %rsi
@@ -36,7 +36,7 @@ __a64_isr_handler:
         pushq %r13
         pushq %r14
         pushq %r15
-        call _isr_handler
+        call isr_handler
         popq %r15
         popq %r14
         popq %r13

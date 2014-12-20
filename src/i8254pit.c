@@ -2,7 +2,7 @@
 #include "arch64.h"
 
 
-void i8254pic_setup()
+void i8254pit_setup()
 {
     _a64_disable_interrupts();
 

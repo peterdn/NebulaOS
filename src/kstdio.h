@@ -15,6 +15,8 @@
 void kprintf(const char *str, ...);
 void kcls();
 void ksetcur(int kx, int ky);
+int kgetcurx();
+int kgetcury();
 
 
 #endif // __KSTDIO_HEADER__

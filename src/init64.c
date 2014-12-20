@@ -41,7 +41,7 @@ void kinit64()
     i8259pic_set_mask(1);
 
     // Set up PIT
-    i8254pic_setup();
+    i8254pit_setup();
     i8259pic_set_mask(0);
 
 

@@ -30,6 +30,6 @@
 
 
 
-void i8254pic_setup();
+void i8254pit_setup();
 
 #endif // __I8254PIT_HEADER__

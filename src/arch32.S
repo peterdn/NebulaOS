@@ -3,13 +3,13 @@
  * Generic getter/setters for control registers.
  */
 .macro DEFINE_CR_GET_SET n
-.globl __a32_get_cr\n
-__a32_get_cr\n:
+.globl _a32_get_cr\n
+_a32_get_cr\n:
         movl %cr\n, %eax
         ret
 
-.globl __a32_set_cr\n
-__a32_set_cr\n:
+.globl _a32_set_cr\n
+_a32_set_cr\n:
         movl 0x4(%esp), %eax    // First parameter is value to set.
         movl %eax, %cr\n
         ret
@@ -24,8 +24,8 @@ DEFINE_CR_GET_SET 3
 /**
  * Returns value of IA32_EFER register.
  */
-.globl __a32_get_ia32_efer
-__a32_get_ia32_efer:
+.globl _a32_get_ia32_efer
+_a32_get_ia32_efer:
         movl $0xC0000080, %ecx
         rdmsr
         ret
@@ -33,8 +33,8 @@ __a32_get_ia32_efer:
 /**
  * Sets CR4.PAE bit to enable physical address extension (PAE).
  */
-.globl __a32_enable_pae
-__a32_enable_pae:
+.globl _a32_enable_pae
+_a32_enable_pae:
         movl %cr4, %eax
         or $0x20, %eax
         movl %eax, %cr4
@@ -44,8 +44,8 @@ __a32_enable_pae:
 /**
  * Sets IA32_EFER.LME bit to enable IA-32e mode.
  */
-.globl __a32_enable_ia32e_mode
-__a32_enable_ia32e_mode:
+.globl _a32_enable_ia32e_mode
+_a32_enable_ia32e_mode:
         movl $0xC0000080, %ecx
         rdmsr
         or $0x100, %eax
@@ -56,8 +56,8 @@ __a32_enable_ia32e_mode:
 /**
  * Sets CR0.PG bit to enable paging.
  */
-.globl __a32_enable_paging
-__a32_enable_paging:
+.globl _a32_enable_paging
+_a32_enable_paging:
         movl %cr0, %eax
         or $(1 << 31), %eax
         movl %eax, %cr0
@@ -68,8 +68,8 @@ __a32_enable_paging:
  * Loads the GDTR register and enters a
  * 64-bit code segment at the specified address.
  */
-.globl __a32_set_ia32e_gdtr_and_enter
-__a32_set_ia32e_gdtr_and_enter:
+.globl _a32_set_ia32e_gdtr_and_enter
+_a32_set_ia32e_gdtr_and_enter:
         movl 0x4(%esp), %eax    // Address of 64-bit procedure.
         movl 0x8(%esp), %edx    // GDT limit in bytes.
         shl $16, %edx
