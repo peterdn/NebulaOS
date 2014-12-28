@@ -3,7 +3,7 @@ NebulaOS
 
 ## Overview
 
-Just another hobby operating system project.
+Just another 64-bit hobby operating system project.
 
 ## Building and running
 
