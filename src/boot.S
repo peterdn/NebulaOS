@@ -25,9 +25,9 @@ multiboot_header:
 boot_entry:
         cli                                 /* disable interrupts */
         movl $(stack + STACK_SIZE), %esp    /* set up the stack */
-        pushl %ebx                          
+        pushl %ebx
         pushl %eax
-        call kinit32                       /* our C entry */
+        call kinit32                        /* our C entry */
 
 
 /* stack starts here */
